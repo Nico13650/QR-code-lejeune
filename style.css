@@ -13,13 +13,23 @@ body {
 }
 
 /* Titre */
-h1 {
-  margin: 2rem 0 1rem 0;
-  font-size: 2rem;
-  letter-spacing: 0.05em;
-  margin-left: 10rem;
-  padding-top: 2rem;
+.message-felicitations {
+  font-size: 1.25rem;
+  text-align: center;
+  line-height: 1.6;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 2rem 1rem 1.5rem 1rem;
+  letter-spacing: 0.03em;
 }
+
+.message-felicitations .souhait {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: #04cba0; /* vert doux pour contraster avec le fond noir */
+}
+
 
 .immat {
   color: #ffffff;
