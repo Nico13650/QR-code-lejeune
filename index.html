@@ -55,42 +55,81 @@
       </table>
       <div class="boutons-fiche">
         <a href="https://drive.google.com/drive/folders/1qlzQHKOKBIlwoG62XPLCoXH7L8fspprl?usp=drive_link" target="_blank" class="btn-fiche">Voir les photos de l'arrivée de votre WT9</a>
-        </a>
       </div>
     </div>
   </div>
-  <!-- Script confettis -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+ <!-- Confettis élégants (chute plus basse) -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
 <script>
-  // Fonction d'animation de confettis
-  function lancerConfettis() {
-    const duree = 3000; // durée en ms
-    const fin = Date.now() + duree;
+  (function () {
+    const COLORS = ['#ffffff', '#04cba0', '#035e49']; // Couleurs Finesse Max
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
 
-    (function frame() {
-      // Confettis à gauche
-      confetti({
-        particleCount: 4,
-        angle: 60,
-        spread: 70,
-        origin: { x: 0 },
-      });
-      // Confettis à droite
-      confetti({
-        particleCount: 4,
-        angle: 120,
-        spread: 70,
-        origin: { x: 1 },
-      });
-      if (Date.now() < fin) {
-        requestAnimationFrame(frame);
-      }
-    })();
-  }
+    window.addEventListener('load', () => {
+      const startDelay = 1200; // attend la fin de l’animation de l’avion
+      setTimeout(runConfettiSequence, startDelay);
+    });
 
-  // Lancer les confettis au chargement
-  window.addEventListener('load', lancerConfettis);
+    function burst(opts) {
+      confetti(Object.assign({
+        particleCount: 18,
+        startVelocity: 48,     // vitesse un peu plus forte pour une trajectoire plus longue
+        spread: 75,
+        ticks: 220,            // durée de vie des particules augmentée (avant : 140)
+        scalar: 0.9,
+        gravity: 1.2,          // gravité augmentée = descente plus visible
+        drift: 0.4,            // léger mouvement latéral naturel
+        colors: COLORS,
+        disableForReducedMotion: true
+      }, opts));
+    }
+
+    function runConfettiSequence() {
+      const duration = 1800; // animation un peu plus longue
+      const end = Date.now() + duration;
+
+      // Départ symétrique
+      burst({ angle: 62,  origin: { x: 0.02, y: 0.05 } });  // plus haut
+      burst({ angle: 118, origin: { x: 0.98, y: 0.05 } });
+
+      // Traîne avec descente progressive
+      (function frame() {
+        const timeLeft = end - Date.now();
+        const base = Math.max(0, timeLeft / duration);
+        const count = Math.round(8 + 12 * base);
+
+        burst({
+          particleCount: count,
+          angle: 60,
+          spread: 70,
+          origin: { x: 0.05, y: 0.05 },
+          startVelocity: 40 + 12 * base
+        });
+
+        burst({
+          particleCount: count,
+          angle: 120,
+          spread: 70,
+          origin: { x: 0.95, y: 0.05 },
+          startVelocity: 40 + 12 * base
+        });
+
+        if (timeLeft > 0) requestAnimationFrame(frame);
+        else burst({
+          particleCount: 14,
+          angle: 90,
+          spread: 55,
+          origin: { x: 0.5, y: 0.05 },
+          startVelocity: 32,
+          gravity: 1.4, // pour que les derniers descendent vraiment bas
+          colors: ['#ffffff']
+        });
+      })();
+    }
+  })();
 </script>
+
 
 </body>
 </html>
