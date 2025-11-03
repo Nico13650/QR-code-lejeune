@@ -59,5 +59,38 @@
       </div>
     </div>
   </div>
+  <!-- Script confettis -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+  // Fonction d'animation de confettis
+  function lancerConfettis() {
+    const duree = 3000; // durée en ms
+    const fin = Date.now() + duree;
+
+    (function frame() {
+      // Confettis à gauche
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 70,
+        origin: { x: 0 },
+      });
+      // Confettis à droite
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 70,
+        origin: { x: 1 },
+      });
+      if (Date.now() < fin) {
+        requestAnimationFrame(frame);
+      }
+    })();
+  }
+
+  // Lancer les confettis au chargement
+  window.addEventListener('load', lancerConfettis);
+</script>
+
 </body>
 </html>
